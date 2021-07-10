@@ -15,3 +15,8 @@ and tempurature would be features (A) and the recorded boiling point would be th
 Two example are given here, the classic winequality optimization where features of the wine are fit to the
 (highly subjective) views of the drinker. And a financial example where we ask ourselves the question,
 given an EMA12 and an EMA26, what is a good combination of these features to be used together?
+
+Github has problems rendering some HTML you can view fully interactive notebooks on nbviewer.
+
+https://nbviewer.ipython.org/github/wshclth/gfo/blob/master/financial.ipynb
+https://nbviewer.ipython.org/github/wshclth/gfo/blob/master/winequality.ipynb
