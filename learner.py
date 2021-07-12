@@ -10,7 +10,7 @@ class GFO:
     the original time series.
     """
 
-    def __init__(self, A, b):
+    def __init__(self, A, b, lr=1e-2):
         """
         Given an A matrix of features with a wanted b set like so.
 
@@ -52,6 +52,7 @@ class GFO:
 
         self.A = A
         self.b = b
+        self.lr = lr
 
     def __compute_residule__(self, A, x, b):
         """Computes the residual of the given vector using euclidian distance
@@ -59,9 +60,9 @@ class GFO:
         r = A*x - b
         return np.sqrt(r.T*r).item()
 
-    def __minimize_plane__(self, A, x, b, lr=1e-4):
+    def __minimize_plane__(self, A, b, p, l):
         """Minimizes x by magnitude given the direction of the vector.
-        Returns the optimized vector such that min(residule(A*x - b)) for
+        Returns the optimized vector such that min(residule(A*x - l)) for
         the current cross section. Plane minimization does _not_ find
         directions, it assumes the direction of x is constant and the minimum
         exists by magnitude transformations
@@ -71,39 +72,41 @@ class GFO:
         precise the answer but the time needed to get to the answer increases
         exponentially.
         """
-
+        
         # First optimize the magnitude. x*1.0 = x therefore 1.0 is the starting
         # weight
-        magnitude = 1.0
+        magnitude = 1
 
         # mx is the minimum vector we are trying to find
-        mx = magnitude * x
+        bp = p - b
+        mx = b + (magnitude * bp)
 
         # The starting residual and an array to keep track of how the residual
         # changes via epoch.
-        residual = self.__compute_residule__(A, mx, b)
+        residual = self.__compute_residule__(A, mx, l)
         rh = [residual]
 
         while True:
             # Increase and decrease the magnitude via the learning rate.
-            magnitudes = [magnitude, magnitude + lr, magnitude - lr]
-
+            magnitudes = [magnitude, magnitude + self.lr, magnitude - self.lr]
+            
             # Compute the residual for the new magnitudes
             residuals_ = [residual,
-                          self.__compute_residule__(A, magnitudes[1]*mx, b),
-                          self.__compute_residule__(A, magnitudes[2]*mx, b)]
+                          self.__compute_residule__(A, b + (magnitudes[1] * bp), l),
+                          self.__compute_residule__(A, b + (magnitudes[2] * bp), l)]
+
             # Find the minimum residual
             mresidx = residuals_.index(min(residuals_))
 
             # If moving both left and right produces a worse residual then
             # the minimum has been found.
             if mresidx == 0:
-                mx = x * magnitude
                 break
             else:
                 magnitude = magnitudes[mresidx]
                 rh.append(residuals_[mresidx])
                 residual = rh[-1]
+                mx = b + magnitudes[mresidx] * bp
 
         return mx, rh
 
@@ -119,19 +122,29 @@ class GFO:
         w, vt = np.linalg.eig(cov)
         vt = np.matrix(vt)
 
-        x = np.zeros(vt[:,0].shape)
         rhg = []
         steps = []
-        for eigidx in range(x.shape[0]):
-            # Nudge the vector into the next dimension by adding the current
-            # eigenvector. x + lambda moves the x vector into a new plane.
-            # Moving through each plane until all planes are optimized.
-            # Moving through planes does not guantee a smaller residual as
-            # time moves on.
-            x, rh = self.__minimize_plane__(self.A, vt[:,eigidx]+x, self.b)
-            steps.append(x)
-            rhg += rh
-            print('optized plane %3d / %3d, global_epoch=' % (eigidx+1,
-                   x.shape[0]), len(rhg))
 
-        return x, rhg, steps
+        x = np.zeros(vt[:, 0].shape)
+        
+        # Keeps track of the best full iteration
+        last_best = None
+        last_best_x = None
+        while True:
+            for eigidx in range(0, x.shape[0]):
+                # Minimize plane defined by the direction of the given eigenvector
+                x, rh = self.__minimize_plane__(self.A, x, vt[:,eigidx], self.b)
+                steps.append(x)
+                # print('optized plane %3d / %3d, global_epoch=' % (eigidx+1,
+                #       x.shape[0]), len(rhg))
+            if last_best is None:
+                last_best = rhg[-1]
+                last_best_x = steps[-1]
+            else:
+                if last_best < rhg[-1] or np.abs(last_best - rhg[-1]) < 1e-8:
+                    break
+                else:
+                    last_best = rhg[-1]
+                    last_best_x = steps[-1]
+
+        return last_best_x, rhg, steps
