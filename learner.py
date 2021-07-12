@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 
 import pandas as pd
 import numpy as np
+import sys
 
 class GFO:
     """Generalized Feature Optimizer. GFO is a lightweight dataset optimizer
@@ -10,7 +11,7 @@ class GFO:
     the original time series.
     """
 
-    def __init__(self, A, b, lr=1e-2):
+    def __init__(self, A, b, lr=1e-2, pre=None):
         """
         Given an A matrix of features with a wanted b set like so.
 
@@ -53,6 +54,7 @@ class GFO:
         self.A = A
         self.b = b
         self.lr = lr
+        self.pre = pre
 
     def __compute_residule__(self, A, x, b):
         """Computes the residual of the given vector using euclidian distance
@@ -75,7 +77,7 @@ class GFO:
         
         # First optimize the magnitude. x*1.0 = x therefore 1.0 is the starting
         # weight
-        magnitude = 1
+        magnitude = 1.0
 
         # mx is the minimum vector we are trying to find
         bp = p - b
@@ -110,7 +112,7 @@ class GFO:
 
         return mx, rh
 
-    def learn(self):
+    def learn(self, lrs=1):
         """Minimizes Ax-b=0 by finding a transformation vector x based on the
         principal components of the feature set A.
         """
@@ -125,26 +127,43 @@ class GFO:
         rhg = []
         steps = []
 
-        x = np.zeros(vt[:, 0].shape)
+        if self.pre is None:
+            x = np.zeros(vt[:, 0].shape)
+        else:
+            x = self.pre
         
         # Keeps track of the best full iteration
         last_best = None
         last_best_x = None
-        while True:
-            for eigidx in range(0, x.shape[0]):
-                # Minimize plane defined by the direction of the given eigenvector
-                x, rh = self.__minimize_plane__(self.A, x, vt[:,eigidx], self.b)
-                steps.append(x)
-                # print('optized plane %3d / %3d, global_epoch=' % (eigidx+1,
-                #       x.shape[0]), len(rhg))
-            if last_best is None:
-                last_best = rhg[-1]
-                last_best_x = steps[-1]
-            else:
-                if last_best < rhg[-1] or np.abs(last_best - rhg[-1]) < 1e-8:
-                    break
-                else:
+        global_epoch = 0
+        local_epoch = 0
+        for _ in range(lrs):
+            while True:
+                for eigidx in range(0, x.shape[0]):
+                    # Minimize plane defined by the direction of the given eigenvector
+                    x, rh = self.__minimize_plane__(self.A, x, vt[:,eigidx], self.b)
+                    steps.append(x)
+                    local_epoch += 1
+                    # print('optized plane %3d / %3d, global_epoch=' % (eigidx+1,
+                    #       x.shape[0]), len(rhg))
+                    # print('\r global_epoch=', global_epoch, 'local plane=', local_epoch, end='')
+                    sys.stdout.flush()
+                    print('global_epoch=', global_epoch, 'local plane=', local_epoch, 'res=', rh[-1], end='\r')
+                    sys.stdout.flush()
+                local_epoch = 0
+                global_epoch += 1
+                rhg.append(rh[-1])
+                if last_best is None:
                     last_best = rhg[-1]
                     last_best_x = steps[-1]
-
+                else:
+                    if last_best <= rhg[-1] or np.abs(last_best - rhg[-1]) < 1e-4:
+                        break
+                    else:
+                        last_best = rhg[-1]
+                        last_best_x = steps[-1]
+                # print('residual: ', rhg[-1], end='\r')
+            print('global_epoch=', global_epoch, 'local plane=', local_epoch, 'res=', rhg[-1])
+            sys.stdout.flush()
+            self.lr = self.lr*0.1
         return last_best_x, rhg, steps
