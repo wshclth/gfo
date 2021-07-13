@@ -17,7 +17,7 @@ class GFO:
 
 
             |-------------------------------------|
-            | f1(x) | f2(x) | f3(x) | ... | fn(x) |
+            | f1(x) | f2(x) | f3(x) | ... | fs(x) |
             |=====================================|
             | f1(0) | f2(0) | f3(0) | ... | fn(0) |
             |-------|-------|-------|-----|-------|
@@ -25,10 +25,10 @@ class GFO:
             |   .   |   .   |   .   |  .  |   .   |
             |   .   |   .   |    .  |  .  |   .   |
             |-------|-------|-------|-----|-------|
-            | f1(n) | f2(n) | . . . . . . . fn(n) |
+            | f1(m) | f2(m) | . . . . . . . fs(m) |
             |-------|-------|-------|-----|-------|
 
-            where fn(n) is observation n of feature n
+            where fs(m) is observation s of feature m
             
             |------|
             | r(0) |
@@ -39,10 +39,10 @@ class GFO:
         b = |  .   |
             |   .  |
             |------|
-            | r(n) |
+            | r(m) |
             |------|
             
-            where r(n) is an observation to find a fit for.
+            where r(m) is an observation to find a fit for.
 
         initalizes the learner to begin learning based on the given parameters.
 
