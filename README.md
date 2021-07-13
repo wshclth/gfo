@@ -23,9 +23,9 @@ The b matrix is defined as so
 | c(0) |
 | c(1) |
 |  ⋮   |
-| c(n) |
+| c(m) |
 
-where c(n) is the value of the wanted value at observation n.
+where c(m) is the value of the wanted value at observation m.
 GFO minimizes Ax-b=0 by using the principal components of A defined by the
 eigenvectors of the Cov(A<sup>T</sup>) as search directions. Starting with
 x = [0 0 0 ... 0]<sup>T</sup> (or a given start vector)
