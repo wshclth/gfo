@@ -6,11 +6,23 @@ gives weights to the features defined in A to obtain b as closely
 as possible.
 
 The A matrix is defined as so
-| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) | ... | f_<sub>n</sub>(n) |
+| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) | ... | f_<sub>s</sub>(n) |
 |:-----------------:|:-----------------:|:-----------------:|:---:|:-----------------:|
 | f_<sub>1</sub>(0) | f_<sub>2</sub>(0) | f_<sub>3</sub>(0) |     |         ⋮         |
 | f_<sub>1</sub>(1) | f_<sub>2</sub>(1) | f_<sub>3</sub>(1) |     |         ⋮         |
 | f_<sub>1</sub>(2) | f_<sub>2</sub>(2) | f_<sub>3</sub>(2) |     |         ⋮         |
 | f_<sub>1</sub>(3) | f_<sub>2</sub>(3) | f_<sub>3</sub>(3) |     |         ⋮         |
 |       ⋮           |        ⋮          |         ⋮         |  ⋱  |         ⋮         |
-| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>n</sub>(n) |
+| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>s</sub>(n) |
+
+where f_<sub>s</sub>(n) is the value of feature s at observation n.
+
+The b matrix is defined as so
+| c(n) |
+|:----:|
+| c(0) |
+| c(1) |
+|  ⋮   |
+| c(n) |
+
+where c(n) is the value of the wanted value at observation n.
