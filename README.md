@@ -26,7 +26,7 @@ The b matrix is defined as so
 | c(n) |
 
 where c(n) is the value of the wanted value at observation n.
-GFO minimizes Ax-b=0 by using the principal components of A (defined by the
+GFO minimizes Ax-b=0 by using the principal components of A defined by the
 eigenvectors of the Cov(A<sup>T</sup>) as search directions. Starting with
 x = [0 0 0 ... 0]^<sup>T</sup> we minimize x in the direction of the first
 eigenvector. After, minimize in the direction of the second eigenvector.
