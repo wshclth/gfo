@@ -1,4 +1,4 @@
-# GFO (Generalized Feature Optimizer)
+## GFO (Generalized Feature Optimizer)
 GFO is a lightweight (~180 lines) machine learning algorithm
 that attemps to find a solution to Ax-b=0 where A is any
 nxm matrix, and b is the wanted result vector. The solution x
