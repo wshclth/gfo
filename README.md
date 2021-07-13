@@ -13,9 +13,9 @@ The A matrix is defined as so
 | f_<sub>1</sub>(2) | f_<sub>2</sub>(2) | f_<sub>3</sub>(2) |     |         ⋮         |
 | f_<sub>1</sub>(3) | f_<sub>2</sub>(3) | f_<sub>3</sub>(3) |     |         ⋮         |
 |       ⋮           |        ⋮          |         ⋮         |  ⋱  |         ⋮         |
-| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>s</sub>(n) |
+| f_<sub>1</sub>(m) | f_<sub>2</sub>(m) | f_<sub>3</sub>(m) |     | f_<sub>s</sub>(m) |
 
-where f_<sub>s</sub>(n) is the value of feature s at observation n.
+where f_<sub>s</sub>(m) is the value of feature s at observation m.
 
 The b matrix is defined as so
 | c(n) |
