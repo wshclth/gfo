@@ -13,4 +13,4 @@ The A matrix is defined as so
 | f_<sub>1</sub>(2) | f_<sub>2</sub>(2) | f_<sub>3</sub>(2) |     |         ⋮         |
 | f_<sub>1</sub>(3) | f_<sub>2</sub>(3) | f_<sub>3</sub>(3) |     |         ⋮         |
 |       ⋮           |        ⋮          |         ⋮         |  ⋱  |         ⋮         |
-| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>3</sub>(n) |
+| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>n</sub>(n) |
