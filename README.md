@@ -6,11 +6,11 @@ gives weights to the features defined in A to obtain b as closely
 as possible.
 
 The A matrix is defined as so
-| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | ... | f_<sub>n</sub>(n) |
-|:-------------:|:-------------:|:-----:|:--------:|
-| f_<sub>1</sub>(0) | f_<sub>2</sub>(0) | |
-| f_<sub>1</sub>(1) | |   $12 |
-| f_<sub>1</sub>(2) | |   $12 |
-| f_<sub>1</sub>(2) | |   $12 |
-| ⋮ | ⋮ | ⋮ | ⋮ |
-| f_<sub>1</sub>(n) | |   $12 |
+| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) | ... | f_<sub>n</sub>(n) |
+|:-----------------:|:-----------------:|:-----------------:|:---:|:-----------------:|
+| f_<sub>1</sub>(0) | f_<sub>2</sub>(0) | f_<sub>3</sub>(0) |     |         ⋮         |
+| f_<sub>1</sub>(1) | f_<sub>2</sub>(1) | f_<sub>3</sub>(1) |     |         ⋮         |
+| f_<sub>1</sub>(2) | f_<sub>2</sub>(2) | f_<sub>3</sub>(2) |     |         ⋮         |
+| f_<sub>1</sub>(3) | f_<sub>2</sub>(3) | f_<sub>3</sub>(3) |     |         ⋮         |
+|       ⋮           |        ⋮          |         ⋮         |  ⋱  |         ⋮         |
+| f_<sub>1</sub>(n) | f_<sub>2</sub>(n) | f_<sub>3</sub>(n) |     | f_<sub>3</sub>(n) |
