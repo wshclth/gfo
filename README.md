@@ -26,3 +26,11 @@ The b matrix is defined as so
 | c(n) |
 
 where c(n) is the value of the wanted value at observation n.
+GFO minimizes Ax-b=0 by using the principal components of A (defined by the
+eigenvectors of the Cov(A<sup>T</sup>) as search directions. Starting with
+x = [0 0 0 ... 0]^<sup>T</sup> we minimize x in the direction of the first
+eigenvector. After, minimize in the direction of the second eigenvector.
+Keep minimizing and looping through each eigenvector until a minimim is found.
+Although no guarnteed, Cov(A<sup>T</sup>) is always positive definite which
+guantees convergence to a minimum. The minimum converged to through the directions
+defined by eig(Cov(A<sup>T</sup>)) is not guanteed to be the global minimum.
