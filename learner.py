@@ -77,7 +77,7 @@ class GFO:
         
         # First optimize the magnitude. x*1.0 = x therefore 1.0 is the starting
         # weight
-        magnitude = 1.0
+        magnitude = 0.0
 
         # mx is the minimum vector we are trying to find
         bp = p - b
@@ -109,7 +109,6 @@ class GFO:
                 rh.append(residuals_[mresidx])
                 residual = rh[-1]
                 mx = b + magnitudes[mresidx] * bp
-
         return mx, rh
 
     def learn(self, lrs=1):
@@ -131,39 +130,39 @@ class GFO:
             x = np.zeros(vt[:, 0].shape)
         else:
             x = self.pre
-        
         # Keeps track of the best full iteration
         last_best = None
         last_best_x = None
         global_epoch = 0
         local_epoch = 0
-        for _ in range(lrs):
+        for _ in range(len(w)):
             while True:
+                Q, R = np.linalg.qr(x.T*vt)
+                x = (Q*x.T).T
                 for eigidx in range(0, x.shape[0]):
                     # Minimize plane defined by the direction of the given eigenvector
                     x, rh = self.__minimize_plane__(self.A, x, vt[:,eigidx], self.b)
                     steps.append(x)
                     local_epoch += 1
-                    # print('optized plane %3d / %3d, global_epoch=' % (eigidx+1,
-                    #       x.shape[0]), len(rhg))
-                    # print('\r global_epoch=', global_epoch, 'local plane=', local_epoch, end='')
                     sys.stdout.flush()
-                    print('global_epoch=', global_epoch, 'local plane=', local_epoch, 'res=', rh[-1], end='\r')
+                    print('global_epoch=%7d local_epoch=%7d residual=%32.16f' % (global_epoch, local_epoch, rh[-1]), end='\r')
                     sys.stdout.flush()
                 local_epoch = 0
                 global_epoch += 1
-                rhg.append(rh[-1])
+                rhg += rh
                 if last_best is None:
                     last_best = rhg[-1]
                     last_best_x = steps[-1]
                 else:
-                    if last_best <= rhg[-1] or np.abs(last_best - rhg[-1]) < 1e-4:
+                    if last_best <= rhg[-1]:
                         break
                     else:
                         last_best = rhg[-1]
                         last_best_x = steps[-1]
                 # print('residual: ', rhg[-1], end='\r')
-            print('global_epoch=', global_epoch, 'local plane=', local_epoch, 'res=', rhg[-1])
+                # Q, R = np.linalg.qr(x.T*vt)
+                # x = (Q*x.T).T
+            print('global_epoch=%7d local_epoch=%7d residual=%32.16f' % (global_epoch, local_epoch, rhg[-1]))
             sys.stdout.flush()
-            self.lr = self.lr*0.1
+            self.lr /= 2.0
         return last_best_x, rhg, steps
